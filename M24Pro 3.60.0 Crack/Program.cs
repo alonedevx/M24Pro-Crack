@@ -129,9 +129,7 @@ namespace M24Pro_Crack_by_AloneDev
             int prc = Convert.ToInt32(Console.ReadLine());
             if (Process.GetProcesses().Any(p => p.Id == prc))
             {
-                Process islem = Process.GetProcessById(prc);
-
-            
+            Process islem = Process.GetProcessById(prc);
             string xd = islem.ProcessName.ToString();
             Process[] kontrol = Process.GetProcessesByName(xd);
             if (kontrol.Length > 0)
