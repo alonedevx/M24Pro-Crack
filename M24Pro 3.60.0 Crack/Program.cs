@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
@@ -10,7 +10,7 @@ namespace M24Pro_Crack_by_AloneDev
 {
     class Program
     {
-        
+
         [Flags]
         public enum ThreadAccess : int
         {
@@ -88,7 +88,7 @@ namespace M24Pro_Crack_by_AloneDev
             }
             return false;
         }
-        public static  bool bulDegistir(IntPtr pHandle, ref byte[] kaynak, ref byte[] aranacakBytes, ref byte[] degisimBytes, uint baslangic, uint bitis)
+        public static bool bulDegistir(IntPtr pHandle, ref byte[] kaynak, ref byte[] aranacakBytes, ref byte[] degisimBytes, uint baslangic, uint bitis)
         {
             bool bulunduMu = false;
             int bytesOkundu = 0, bytesYazildi = 0, sira = 0;
@@ -109,9 +109,9 @@ namespace M24Pro_Crack_by_AloneDev
                 return false;
         }
 
-        public static void yenisatır(int deger, int ikincideger)
+        public static void yeniSatir(int deger, int ikinciDeger)
         {
-            if (deger == ikincideger)
+            if (deger == ikinciDeger)
             {
                 Console.WriteLine(Environment.NewLine);
             }
@@ -123,121 +123,119 @@ namespace M24Pro_Crack_by_AloneDev
 
         static void Main(string[] args)
         {
-            crack_begin:
+            CrackBegin:
             Console.Title = "M24PRO 3.60.0 Crack";
-            Console.Write(Environment.NewLine+"PID Giriniz : ");
-            int prc = Convert.ToInt32(Console.ReadLine());
-            if (Process.GetProcesses().Any(p => p.Id == prc))
+            Console.Write(Environment.NewLine + "PID Giriniz : ");
+            int processId = Convert.ToInt32(Console.ReadLine());
+            if (Process.GetProcesses().Any(p => p.Id == processId))
             {
-            Process islem = Process.GetProcessById(prc);
-            string xd = islem.ProcessName.ToString();
-            Process[] kontrol = Process.GetProcessesByName(xd);
-            if (kontrol.Length > 0)
-            {
-                IntPtr pHandle = OpenProcess(0xFFFF, true, islem.Id);
-                byte[] aranacakBytes = { 0x80, 0x7D, 0xA9, 0x00, 0x0F, 0x84, 0x80, 0x00 };
-                byte[] degisimBytes = { 0x80, 0x7D, 0xA9, 0x00, 0x90, 0x90, 0x90, 0x90 };
-                byte[] kaynak = new byte[0x100];
-                uint baslangic = (uint)islem.MainModule.BaseAddress;
-                uint bitis = 0xFF00000;
-
-                if (bulDegistir(pHandle, ref kaynak, ref aranacakBytes, ref degisimBytes, baslangic, bitis))
+                Process islem = Process.GetProcessById(processId);
+                string processName = islem.ProcessName.ToString();
+                Process[] kontrol = Process.GetProcessesByName(processName);
+                if (kontrol.Length > 0)
                 {
+                    IntPtr pHandle = OpenProcess(0xFFFF, true, islem.Id);
+                    byte[] aranacakBytes = { 0x80, 0x7D, 0xA9, 0x00, 0x0F, 0x84, 0x80, 0x00 };
+                    byte[] degisimBytes = { 0x80, 0x7D, 0xA9, 0x00, 0x90, 0x90, 0x90, 0x90 };
+                    byte[] kaynak = new byte[0x100];
+                    uint baslangic = (uint)islem.MainModule.BaseAddress;
+                    uint bitis = 0xFF00000;
+
                     if (bulDegistir(pHandle, ref kaynak, ref aranacakBytes, ref degisimBytes, baslangic, bitis))
                     {
-                        Console.WriteLine("Crack işlemi başarıyla tamamlandı");
-                        Console.WriteLine("Yazmış olduğunuz PID'a ait uygulama 50saniye içerisinde donduralacak");
-                        
-                        int sayac = 50;
-                        bool durum = true;
-                        bool deger = sayac <= 0;
-                        while (durum)
+                        if (bulDegistir(pHandle, ref kaynak, ref aranacakBytes, ref degisimBytes, baslangic, bitis))
                         {
-                            Thread.Sleep(1000);
-                            if (!deger)
+                            Console.WriteLine("Crack işlemi başarıyla tamamlandı");
+                            Console.WriteLine("Yazmış olduğunuz PID'a ait uygulama 50saniye içerisinde donduralacak");
+
+                            int sayac = 50;
+                            bool durum = true;
+                            bool deger = sayac <= 0;
+                            while (durum)
                             {
-                                Console.Write(sayac + " - ");
+                                Thread.Sleep(1000);
+                                if (!deger)
+                                {
+                                    Console.Write(sayac + " - ");
+                                }
+                                if (sayac <= 0)
+                                {
+                                    SuspendProcess(processId);
+                                    Console.WriteLine(Environment.NewLine + processId + " PID'ının sahip olduğu uygulama durduruldu !");
+                                    sayac = 50;
+                                    durum = false;
+
+                                }
+                                yeniSatir(sayac, 41);
+                                yeniSatir(sayac, 31);
+                                yeniSatir(sayac, 21);
+                                yeniSatir(sayac, 11);
+                                yeniSatir(sayac, 0);
+                                sayac--;
                             }
-                            if (sayac <= 0)
+                            Console.WriteLine("Tekrar crack yapmak istermisiniz (E/H)");
+                            string answer = Console.ReadLine().ToUpper();
+                            if (answer == "E")
                             {
-                                SuspendProcess(prc);
-                                Console.WriteLine(Environment.NewLine+prc + " PID'ının sahip olduğu uygulama durduruldu !");
-                                sayac = 50;
-                                durum = false;
-                               
+                                Console.Clear();
+                                goto CrackBegin;
                             }
-                            yenisatır(sayac, 41);
-                            yenisatır(sayac, 31);
-                            yenisatır(sayac, 21);
-                            yenisatır(sayac, 11);
-                            yenisatır(sayac, 0);
-                            sayac--;
+                            else
+                            {
+                                Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
+                            }
                         }
+                        else
+                        {
+                            Console.WriteLine("Crack işlemi tamamlanamadı , Yönetici olarak çalıştırmayı deneyiniz");
+                            Console.WriteLine("Tekrar crack yapmak istermisiniz (E/H)");
+                            string hs = Console.ReadLine();
+                            string answer = Console.ReadLine().ToUpper();
+                            if (answer == "E")
+                            {
+                                Console.Clear();
+                                goto CrackBegin;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Crack işlemi tamamlanamadı , Yönetici olarak çalıştırmayı deneyin");
                         Console.WriteLine("Tekrar crack yapmak istermisiniz (E/H)");
-                        string hs = Console.ReadLine();
-                        hs = hs.ToUpper();
-                        if (hs == "E")
+                        string answer = Console.ReadLine().ToUpper();
+                        if (answer == "E")
                         {
                             Console.Clear();
-                            goto crack_begin;
+                            goto CrackBegin;
                         }
                         else
                         {
                             Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
                         }
                     }
-                    else
-                    {
-                        Console.WriteLine("Crack işlemi tamamlanamadı , Yönetici olarak çalıştırmayı deneyiniz");
-                        Console.WriteLine("Tekrar crack yapmak istermisiniz (E/H)");
-                        string hs = Console.ReadLine();
-                        hs = hs.ToUpper();
-                        if (hs == "E")
-                        {
-                            Console.Clear();
-                            goto crack_begin;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
-                        }
-                    }
+                    CloseHandle(pHandle);
                 }
-                else
-                {
-                    Console.WriteLine("Crack işlemi tamamlanamadı , Yönetici olarak çalıştırmayı deneyin");
-                    Console.WriteLine("Tekrar crack yapmak istermisiniz (E/H)");
-                    string hs = Console.ReadLine();
-                    hs = hs.ToUpper();
-                    if (hs == "E")
-                    {
-                        Console.Clear();
-                        goto crack_begin;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
-                    }
-                }
-                CloseHandle(pHandle); 
-            } 
             }
             else
             {
                 Console.WriteLine("Belirttiğiniz PID'a ait uygulama bulunamadı");
                 Console.WriteLine("Tekrar denemek istermisiniz (E/H)");
                 string hs = Console.ReadLine();
-                hs = hs.ToUpper();
-                if (hs == "E")
+                string answer = Console.ReadLine().ToUpper();
+                if (answer == "E")
                 {
                     Console.Clear();
-                    goto crack_begin;
+                    goto CrackBegin;
                 }
                 else
                 {
                     Console.WriteLine("Çıkış yapmak için bir tuşa basınız.");
                 }
-            }  
+            }
             Console.ReadKey();
         }
     }
